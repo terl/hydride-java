@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="co.libly.hydride.RandomTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2019-08-04T22:23:17" hostname="gp.local" time="0.009">
+  <properties/>
+  <testcase name="randomisedBufferDeterministic()" classname="co.libly.hydride.RandomTest" time="0.001"/>
+  <testcase name="getRandomUnsignedIntWithUpperBound()" classname="co.libly.hydride.RandomTest" time="0.001"/>
+  <testcase name="getRandomUnsignedInt()" classname="co.libly.hydride.RandomTest" time="0.002"/>
+  <testcase name="randomisedBuffer()" classname="co.libly.hydride.RandomTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
