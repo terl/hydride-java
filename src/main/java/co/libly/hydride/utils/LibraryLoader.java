@@ -235,6 +235,7 @@ public final class LibraryLoader {
         File temp = new File(temporaryDir, fileName);
         temp.setReadable(true);
         temp.setExecutable(true);
+        temp.setWritable(true, true);
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
 
