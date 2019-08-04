@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Libly - Terl Tech Ltd  • 04/08/2019, 22:48 • libly.co, goterl.com
+ * Copyright (c) Libly - Terl Tech Ltd  • 04/08/2019, 22:41 • libly.co, goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
@@ -233,6 +233,9 @@ public final class LibraryLoader {
 
         String fileName = new File(pathInJar).getName();
         File temp = new File(temporaryDir, fileName);
+        temp.setReadable(true);
+        temp.setExecutable(true);
+
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
 
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
@@ -287,6 +290,8 @@ public final class LibraryLoader {
         String tempDirPrefix = "hydride";
         File generatedDir = Files.createTempDirectory(tempDirPrefix)
                 .toFile();
+        generatedDir.setReadable(true);
+        generatedDir.setExecutable(true);
 
         generatedDir.deleteOnExit();
         return generatedDir;
