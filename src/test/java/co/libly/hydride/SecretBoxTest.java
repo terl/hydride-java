@@ -38,19 +38,7 @@ public class SecretBoxTest extends BaseTest {
         byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
         final NativeLong messageId = new NativeLong(0);
 
-        // Encrypt first
-        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, context, key);
-        // Did the encryption work?
-        assertEquals(0, encryptSuccess);
-
-        // Then decrypt the encrypted
-        byte[] decrypted = new byte[cipher.length - Hydrogen.HYDRO_SECRETBOX_HEADERBYTES];
-        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, context, key);
-        // Did the decryption work?
-        assertEquals(0, decryptSuccess);
-
-        // Are the message and the decrypted message the same?
-        assertTrue(arraysEqual(messageBytes, decrypted));
+        assertTrue(encryptFromServerToClient(message, contextBytes, key, key));
     }
 
 
@@ -67,7 +55,7 @@ public class SecretBoxTest extends BaseTest {
         final NativeLong messageId = new NativeLong(0);
 
         // Encrypt first
-        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, context, key);
+        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, key);
         // Did the encryption work?
         assertEquals(0, encryptSuccess);
 
@@ -83,7 +71,7 @@ public class SecretBoxTest extends BaseTest {
         // Now after probe verification, we can continue on
         // with decryption thereby mitigating a large cipherText
         // attack
-        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, context, key);
+        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, contextBytes, key);
         // Did the decryption work?
         assertEquals(0, decryptSuccess);
 

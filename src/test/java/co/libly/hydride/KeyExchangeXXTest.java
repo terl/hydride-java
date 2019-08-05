@@ -13,6 +13,7 @@ import com.sun.jna.NativeLong;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeyExchangeXXTest extends BaseTest {
 
@@ -50,18 +51,7 @@ public class KeyExchangeXXTest extends BaseTest {
         hydrogen.hydro_kx_xx_4(stateServer, serverSession, null, packet3, null);
 
 
-        // Encrypt
-        NativeLong messageId = new NativeLong(1);
-        byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
-        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, context, serverSession.getTx());
-        assertEquals(0, encryptSuccess);
-
-        // Now let's decrypt that message on the client,
-        // take note of the client session keypair
-        byte[] decrypted = new byte[messageBytes.length];
-        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, context, clientSession.getRx());
-        assertEquals(0, decryptSuccess);
-        assertEquals(message, new String(decrypted));
+        assertTrue(encryptFromServerToClient(message, contextBytes, serverSession.getTx(), clientSession.getRx()));
     }
 
 

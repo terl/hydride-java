@@ -8,8 +8,11 @@
 
 package co.libly.hydride;
 
+import com.sun.jna.NativeLong;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTest {
@@ -44,6 +47,25 @@ public class BaseTest {
 
     public boolean arraysEqual(byte[] buffer, byte[] buffer2) {
         return hydrogen.hydro_equal(buffer, buffer2, buffer.length);
+    }
+
+    public boolean encryptFromServerToClient(String message, byte[] contextBytes, byte[] serverKey, byte[] clientKey) {
+        byte[] messageBytes = message.getBytes();
+        // Now let's send from the server to the client,
+        // take note of the server session keypair
+        NativeLong messageId = new NativeLong(1);
+        byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
+        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, serverKey);
+        assertEquals(0, encryptSuccess);
+
+        // Now let's decrypt that message on the client,
+        // take note of the client session keypair
+        byte[] decrypted = new byte[messageBytes.length];
+        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, contextBytes, clientKey);
+        assertEquals(0, decryptSuccess);
+        assertEquals(message, new String(decrypted));
+
+        return true;
     }
 
 }

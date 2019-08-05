@@ -101,8 +101,8 @@ public class Hydrogen {
     public native int hydro_kdf_derive_from_key(byte[] subKey, int subKeyLen, NativeLong subKeyId, byte[] context, byte[] masterKey);
 
     public native void hydro_secretbox_keygen(byte[] key);
-    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, NativeLong messageId, String context, byte[] key);
-    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, NativeLong messageId, String context, byte[] key);
+    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, NativeLong messageId, byte[] context, byte[] key);
+    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, NativeLong messageId, byte[] context, byte[] key);
 
     public native void hydro_secretbox_probe_create(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
     public native int hydro_secretbox_probe_verify(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
