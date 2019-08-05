@@ -19,10 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.ProviderNotFoundException;
+import java.nio.file.*;
 
 /**
  * A simple library class which helps with loading dynamic sodium library stored in the
@@ -233,12 +230,8 @@ public final class LibraryLoader {
 
         String fileName = new File(pathInJar).getName();
         File temp = new File(temporaryDir, fileName);
-        temp.setReadable(true);
-        temp.setExecutable(true);
-        temp.setWritable(true, true);
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
-
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
         try {
             byte [] dest = new byte[4096];
@@ -288,14 +281,12 @@ public final class LibraryLoader {
 
     // VisibleForTesting
     static File createTempDirectory() throws IOException {
-        String tempDirPrefix = "hydride";
-        File generatedDir = Files.createTempDirectory(tempDirPrefix)
-                .toFile();
-        generatedDir.setReadable(true);
-        generatedDir.setExecutable(true);
-
-        generatedDir.deleteOnExit();
-        return generatedDir;
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File hydrideDirectory = new File(tempDir, "hydride");
+        if (hydrideDirectory.mkdir()) {
+            hydrideDirectory.deleteOnExit();
+        }
+        return hydrideDirectory;
     }
 
     /**
