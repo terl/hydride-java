@@ -9,10 +9,8 @@
 package co.libly.hydride;
 
 
-import com.sun.jna.NativeLong;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeyExchangeXXTest extends BaseTest {

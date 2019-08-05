@@ -8,7 +8,6 @@
 
 package co.libly.hydride;
 
-import com.sun.jna.NativeLong;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 
