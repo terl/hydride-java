@@ -229,7 +229,7 @@ public final class LibraryLoader {
         }
 
         String fileName = new File(pathInJar).getName();
-        File temp = new File(temporaryDir, fileName);
+        File temp = File.createTempFile(fileName, "", temporaryDir);
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
