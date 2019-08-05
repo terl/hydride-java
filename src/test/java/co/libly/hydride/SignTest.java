@@ -31,7 +31,7 @@ public class SignTest extends BaseTest {
     @Test
     public void sign() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair.ByReference();
+        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
         hydrogen.hydro_sign_keygen(keyPair);
 
         byte[] sig = new byte[Hydrogen.HYDRO_SIGN_BYTES];
@@ -44,8 +44,8 @@ public class SignTest extends BaseTest {
     @Test
     public void signDeterministic() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair.ByReference();
-        Hydrogen.HydroSignKeyPair keyPair2 = new Hydrogen.HydroSignKeyPair.ByReference();
+        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
+        Hydrogen.HydroSignKeyPair keyPair2 = new Hydrogen.HydroSignKeyPair();
 
         byte[] seed = new byte[Hydrogen.HYDRO_SIGN_SEEDBYTES];
         hydrogen.hydro_random_buf(seed, Hydrogen.HYDRO_SIGN_SEEDBYTES);
@@ -66,12 +66,12 @@ public class SignTest extends BaseTest {
     @Test
     public void signMultiPart() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair.ByReference();
+        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
         hydrogen.hydro_sign_keygen(keyPair);
 
         byte[] sig = new byte[Hydrogen.HYDRO_SIGN_BYTES];
         byte[] message2 = "another message".getBytes();
-        Hydrogen.HydroSignState state = new Hydrogen.HydroSignState.ByReference();
+        Hydrogen.HydroSignState state = new Hydrogen.HydroSignState();
 
         // Sign
         hydrogen.hydro_sign_init(state, contextBytes);

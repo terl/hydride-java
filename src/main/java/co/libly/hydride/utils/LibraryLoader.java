@@ -196,6 +196,9 @@ public final class LibraryLoader {
                 return getPath("windows", "libhydrogen.dll");
             }
         }
+        if (Platform.isARM()) {
+            return getPath("armv6", "libhydrogen.so");
+        }
         if (Platform.isLinux()) {
             if (is64Bit) {
                 return getPath("linux64", "libhydrogen.so");
@@ -205,10 +208,6 @@ public final class LibraryLoader {
         }
         if (Platform.isMac()) {
             return getPath("mac", "libhydrogen.dylib");
-        }
-
-        if (Platform.isARM()) {
-            return getPath("armv6", "libhydrogen.so");
         }
 
         String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),

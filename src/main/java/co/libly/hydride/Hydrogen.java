@@ -101,8 +101,8 @@ public class Hydrogen {
     public native int hydro_kdf_derive_from_key(byte[] subKey, int subKeyLen, NativeLong subKeyId, byte[] context, byte[] masterKey);
 
     public native void hydro_secretbox_keygen(byte[] key);
-    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, NativeLong messageId, byte[] context, byte[] key);
-    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, NativeLong messageId, byte[] context, byte[] key);
+    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, NativeLong messageId, String context, byte[] key);
+    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, NativeLong messageId, String context, byte[] key);
 
     public native void hydro_secretbox_probe_create(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
     public native int hydro_secretbox_probe_verify(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
@@ -131,8 +131,6 @@ public class Hydrogen {
 
     public static class HydroSignKeyPair extends Structure {
 
-        public static class ByReference extends HydroSignKeyPair implements Structure.ByReference { }
-
         @Override
         protected List<String> getFieldOrder() {
             return Arrays.asList("pk", "sk");
@@ -151,8 +149,6 @@ public class Hydrogen {
     }
 
     public static class HydroSignState extends Structure {
-
-        public static class ByReference extends HydroSignState implements Structure.ByReference { }
 
         @Override
         protected List<String> getFieldOrder() {
@@ -191,11 +187,10 @@ public class Hydrogen {
     public static int HYDRO_KX_SECRETKEYBYTES = 32;
     public static int HYDRO_KX_PSKBYTES = 32;
     public static int HYDRO_KX_SEEDBYTES = 32;
-    public static int HYDRO_KX_N_PACKET1BYTES = 32;
 
+    public static int HYDRO_KX_N_PACKET1BYTES = 32;
     public static int HYDRO_KX_KK_PACKET1BYTES = 32;
     public static int HYDRO_KX_KK_PACKET2BYTES = 32;
-
     public static int HYDRO_KX_XX_PACKET1BYTES = 32;
     public static int HYDRO_KX_XX_PACKET2BYTES = 80;
     public static int HYDRO_KX_XX_PACKET3BYTES = 48;
@@ -216,8 +211,6 @@ public class Hydrogen {
 
     public static class HydroKxKeyPair extends Structure {
 
-        public static class ByReference extends HydroKxKeyPair implements Structure.ByReference { }
-
         @Override
         protected List<String> getFieldOrder() {
             return Arrays.asList("pk", "sk");
@@ -236,8 +229,6 @@ public class Hydrogen {
     }
 
     public static class HydroKxSessionKeyPair extends Structure {
-
-        public static class ByReference extends HydroKxSessionKeyPair implements Structure.ByReference { }
 
         @Override
         protected List<String> getFieldOrder() {
@@ -258,14 +249,12 @@ public class Hydrogen {
 
     public static class HydroKxState extends Structure {
 
-        public static class ByReference extends HydroKxState implements Structure.ByReference { }
-
         @Override
         protected List<String> getFieldOrder() {
             return Arrays.asList("eph_kp", "h", "ck", "k");
         }
 
-        public HydroKxKeyPair eph_kp = new HydroKxKeyPair.ByReference();
+        public HydroKxKeyPair eph_kp = new HydroKxKeyPair();
         public byte[] h = new byte[32];
         public byte[] ck = new byte[32];
         public byte[] k = new byte[32];

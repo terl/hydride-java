@@ -24,11 +24,11 @@ public class KeyExchangeNTest extends BaseTest {
 
     @Test
     public void keyExchange() {
-        Hydrogen.HydroKxKeyPair serverKeyPair = new Hydrogen.HydroKxKeyPair.ByReference();
+        Hydrogen.HydroKxKeyPair serverKeyPair = new Hydrogen.HydroKxKeyPair();
         hydrogen.hydro_kx_keygen(serverKeyPair);
 
         // Client: generate session keys and a packet with an ephemeral public key to send to the server
-        Hydrogen.HydroKxSessionKeyPair clientSessionKp = new Hydrogen.HydroKxSessionKeyPair.ByReference();
+        Hydrogen.HydroKxSessionKeyPair clientSessionKp = new Hydrogen.HydroKxSessionKeyPair();
         byte[] packet1 = new byte[Hydrogen.HYDRO_KX_N_PACKET1BYTES];
         int genSuccess = hydrogen.hydro_kx_n_1(clientSessionKp, packet1, null, serverKeyPair.getPublicKey());
         assertEquals(0, genSuccess);
@@ -38,20 +38,20 @@ public class KeyExchangeNTest extends BaseTest {
         // Done! sessionKeyPair.tx is the key for sending data to the client,
         // and sessionKeyPair.rx is the key for receiving data from the client.
         // The session keys are the same as those computed by the client, but swapped.
-        Hydrogen.HydroKxSessionKeyPair serverSessionKp = new Hydrogen.HydroKxSessionKeyPair.ByReference();
+        Hydrogen.HydroKxSessionKeyPair serverSessionKp = new Hydrogen.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_n_2(serverSessionKp, packet1, null, serverKeyPair);
 
         // Now let's send from the server to the client,
         // take note of the server session keypair
         NativeLong messageId = new NativeLong(1);
         byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
-        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, serverSessionKp.getTx());
+        int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, context, serverSessionKp.getTx());
         assertEquals(0, encryptSuccess);
 
         // Now let's decrypt that message on the client,
         // take note of the client session keypair
         byte[] decrypted = new byte[messageBytes.length];
-        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, contextBytes, clientSessionKp.getRx());
+        int decryptSuccess = hydrogen.hydro_secretbox_decrypt(decrypted, cipher, cipher.length, messageId, context, clientSessionKp.getRx());
         assertEquals(0, decryptSuccess);
         assertEquals(message, new String(decrypted));
     }
