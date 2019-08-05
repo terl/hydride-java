@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="co.libly.hydride.HelpersTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-08-04T22:23:16" hostname="gp.local" time="0.02">
-  <properties/>
-  <testcase name="zeroArray()" classname="co.libly.hydride.HelpersTest" time="0.003"/>
-  <testcase name="hexadecimalTest()" classname="co.libly.hydride.HelpersTest" time="0.009"/>
-  <testcase name="arraysAreEqual()" classname="co.libly.hydride.HelpersTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
