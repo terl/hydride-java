@@ -53,7 +53,7 @@ public class BaseTest {
         byte[] messageBytes = message.getBytes();
         // Now let's send from the server to the client,
         // take note of the server session keypair
-        NativeLong messageId = new NativeLong(1L, true);
+        long messageId = 1L;
         byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
         int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, serverKey);
         assertEquals(0, encryptSuccess);

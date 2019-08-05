@@ -9,7 +9,6 @@
 package co.libly.hydride;
 
 import co.libly.hydride.utils.LibraryLoader;
-import com.sun.jna.NativeLong;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -98,11 +97,11 @@ public class Hydrogen {
     public static int HYDRO_KDF_BYTES_MAX = 65535;
 
     public native int hydro_kdf_keygen(byte[] masterKey);
-    public native int hydro_kdf_derive_from_key(byte[] subKey, int subKeyLen, NativeLong subKeyId, byte[] context, byte[] masterKey);
+    public native int hydro_kdf_derive_from_key(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey);
 
     public native void hydro_secretbox_keygen(byte[] key);
-    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, NativeLong messageId, byte[] context, byte[] key);
-    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, NativeLong messageId, byte[] context, byte[] key);
+    public native int hydro_secretbox_encrypt(byte[] cipher, byte[] message, int messageLen, long messageId, byte[] context, byte[] key);
+    public native int hydro_secretbox_decrypt(byte[] message, byte[] cipher, int cipherLen, long messageId, byte[] context, byte[] key);
 
     public native void hydro_secretbox_probe_create(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
     public native int hydro_secretbox_probe_verify(byte[] probe, byte[] cipher, int cipherLen, byte[] context, byte[] key);
@@ -169,12 +168,12 @@ public class Hydrogen {
     public static int HYDRO_PWHASH_STOREDBYTES = 128;
 
     public native void hydro_pwhash_keygen(byte[] masterKey);
-    public native int hydro_pwhash_deterministic(byte[] key, int keyLen, byte[] password, int passwordLen, byte[] context, byte[] masterKey, NativeLong opsLimit, int memLimit, byte threads);
-    public native int hydro_pwhash_create(byte[] stored, byte[] password, int passwordLen, byte[] masterKey, NativeLong opsLimit, int memLimit, byte threads);
-    public native int hydro_pwhash_verify(byte[] stored, byte[] password, int passwordLen, byte[] masterKey, NativeLong opsLimitMax, int memLimitMax, byte threadsMax);
-    public native int hydro_pwhash_derive_static_key(byte[] staticKey, int staticKeyLen, byte[] stored, byte[] password, int passwordLen, byte[] context, byte[] masterKey, NativeLong opsLimitMax, int memLimitMax, byte threadsMax);
+    public native int hydro_pwhash_deterministic(byte[] key, int keyLen, byte[] password, int passwordLen, byte[] context, byte[] masterKey, long opsLimit, int memLimit, byte threads);
+    public native int hydro_pwhash_create(byte[] stored, byte[] password, int passwordLen, byte[] masterKey, long opsLimit, int memLimit, byte threads);
+    public native int hydro_pwhash_verify(byte[] stored, byte[] password, int passwordLen, byte[] masterKey, long opsLimitMax, int memLimitMax, byte threadsMax);
+    public native int hydro_pwhash_derive_static_key(byte[] staticKey, int staticKeyLen, byte[] stored, byte[] password, int passwordLen, byte[] context, byte[] masterKey, long opsLimitMax, int memLimitMax, byte threadsMax);
     public native int hydro_pwhash_reencrypt(byte[] stored, byte[] masterKey, byte[] newMasterKey);
-    public native int hydro_pwhash_upgrade(byte[] stored, byte[] masterKey, NativeLong opsLimit, int memLimit, byte threads);
+    public native int hydro_pwhash_upgrade(byte[] stored, byte[] masterKey, long opsLimit, int memLimit, byte threads);
 
 
 

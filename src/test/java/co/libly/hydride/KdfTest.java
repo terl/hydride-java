@@ -9,7 +9,6 @@
 package co.libly.hydride;
 
 
-import com.sun.jna.NativeLong;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,15 +35,15 @@ public class KdfTest extends BaseTest {
         byte[] subKey2 = new byte[Hydrogen.HYDRO_KDF_BYTES_MIN];
         byte[] subKey3 = new byte[Hydrogen.HYDRO_KDF_BYTES_MIN];
 
-        hydrogen.hydro_kdf_derive_from_key(subKey, subKey.length, new NativeLong(1), contextBytes, masterKey);
-        hydrogen.hydro_kdf_derive_from_key(subKey2, subKey2.length, new NativeLong(1), contextBytes, masterKey);
+        hydrogen.hydro_kdf_derive_from_key(subKey, subKey.length, 1L, contextBytes, masterKey);
+        hydrogen.hydro_kdf_derive_from_key(subKey2, subKey2.length, 1L, contextBytes, masterKey);
 
         // Subkey 1 and 3 should be the same
         assertTrue(hasAtLeastOneNonZeroNumber(subKey));
         assertTrue(arraysEqual(subKey, subKey2));
 
         // Now generate another subkey with a different subKeyId
-        hydrogen.hydro_kdf_derive_from_key(subKey3, subKey3.length, new NativeLong(2), contextBytes, masterKey);
+        hydrogen.hydro_kdf_derive_from_key(subKey3, subKey3.length, 2L, contextBytes, masterKey);
 
         // Subkey 1 and 3 should not be the same as the subKeyId parameter is different
         assertFalse(arraysEqual(subKey, subKey3));

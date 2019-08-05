@@ -26,7 +26,7 @@ public class PwHashTest extends BaseTest {
     private byte[] passwordBytes = password.getBytes();
 
     // OpsLimit has to be positive
-    private NativeLong opsLimit = new NativeLong(2L);
+    private long opsLimit = 2L;
     private byte threads = (byte) 1;
     private int memLimit = 0; // 0 means use the default
 
@@ -141,7 +141,7 @@ public class PwHashTest extends BaseTest {
         assertEquals(0, hashSuccess);
 
         // Ops limit has to be positive
-        NativeLong newOps = new NativeLong(4L);
+        long newOps = 4L;
         hydrogen.hydro_pwhash_upgrade(hash, masterKey, newOps, memLimit, threads);
         int hashVerified = hydrogen.hydro_pwhash_verify(hash, passwordBytes, passwordBytes.length, masterKey, newOps, memLimit, threads);
 
