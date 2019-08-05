@@ -208,7 +208,7 @@ public final class LibraryLoader {
         }
 
         if (Platform.isARM()) {
-            return getPath("armv7", "libhydrogen.so");
+            return getPath("armv6", "libhydrogen.so");
         }
 
         String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),
@@ -300,17 +300,8 @@ public final class LibraryLoader {
     public void setPermissions(File file) throws IOException{
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);
-        perms.add(PosixFilePermission.OWNER_WRITE);
-        perms.add(PosixFilePermission.OWNER_EXECUTE);
-
         perms.add(PosixFilePermission.OTHERS_READ);
-        perms.add(PosixFilePermission.OTHERS_WRITE);
-        perms.add(PosixFilePermission.OTHERS_EXECUTE);
-
         perms.add(PosixFilePermission.GROUP_READ);
-        perms.add(PosixFilePermission.GROUP_WRITE);
-        perms.add(PosixFilePermission.GROUP_EXECUTE);
-
         Files.setPosixFilePermissions(file.toPath(), perms);
     }
 
