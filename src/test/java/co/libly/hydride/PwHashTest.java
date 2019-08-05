@@ -130,7 +130,6 @@ public class PwHashTest extends BaseTest {
         int hashSuccess = hydrogen.hydro_pwhash_create(hash, passwordBytes, passwordBytes.length, masterKey, opsLimit, memLimit, threads);
 
         int reEncryptSuccess = hydrogen.hydro_pwhash_reencrypt(hash, masterKey, newMasterKey);
-
         assertEquals(0, reEncryptSuccess);
     }
 
