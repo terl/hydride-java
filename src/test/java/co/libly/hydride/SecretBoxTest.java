@@ -33,11 +33,6 @@ public class SecretBoxTest extends BaseTest {
         // Generate key
         byte[] key = new byte[Hydrogen.HYDRO_SECRETBOX_KEYBYTES];
         hydrogen.hydro_secretbox_keygen(key);
-
-        // Make cipherText array
-        byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
-        final NativeLong messageId = new NativeLong(0);
-
         assertTrue(encryptFromServerToClient(message, contextBytes, key, key));
     }
 
@@ -52,7 +47,7 @@ public class SecretBoxTest extends BaseTest {
         byte[] probe = new byte[Hydrogen.HYDRO_SECRETBOX_PROBEBYTES];
         byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
         byte[] decrypted = new byte[messageBytes.length];
-        final NativeLong messageId = new NativeLong(0);
+        final NativeLong messageId = new NativeLong(0L);
 
         // Encrypt first
         int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, key);
