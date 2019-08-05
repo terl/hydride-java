@@ -284,16 +284,15 @@ public final class LibraryLoader {
     }
 
     // VisibleForTesting
-    static File createTempDirectory() throws IOException {
+    static File createTempDirectory() {
         String tempDir = System.getProperty("java.io.tmpdir");
         File hydrideDirectory = new File(tempDir, "hydride");
-        if (hydrideDirectory.mkdir()) {
-            hydrideDirectory.deleteOnExit();
-        }
+        hydrideDirectory.mkdir();
+        hydrideDirectory.deleteOnExit();
         return hydrideDirectory;
     }
 
-    public void setPermissions(File file) throws IOException{
+    private void setPermissions(File file) throws IOException{
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.OWNER_WRITE);
