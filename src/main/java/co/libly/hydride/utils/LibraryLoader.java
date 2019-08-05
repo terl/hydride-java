@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.*;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A simple library class which helps with loading dynamic sodium library stored in the
@@ -229,7 +232,11 @@ public final class LibraryLoader {
         }
 
         String fileName = new File(pathInJar).getName();
-        File temp = File.createTempFile(fileName, "", temporaryDir);
+        File temp = new File(temporaryDir, fileName);
+
+        if (!temp.exists()) {
+            temp.createNewFile();
+        }
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
@@ -253,6 +260,7 @@ public final class LibraryLoader {
             out.close();
         }
 
+        setPermissions(temp);
         return temp;
     }
 
@@ -287,6 +295,14 @@ public final class LibraryLoader {
             hydrideDirectory.deleteOnExit();
         }
         return hydrideDirectory;
+    }
+
+    public void setPermissions(File file) throws IOException{
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OTHERS_READ);
+        perms.add(PosixFilePermission.GROUP_READ);
+        Files.setPosixFilePermissions(file.toPath(), perms);
     }
 
     /**
