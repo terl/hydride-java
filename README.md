@@ -30,13 +30,16 @@ dependencies {
 Unlike other implementations, Hydride **packages the shared libraries** 
 (libhydrogen.so, libhydrogen.dylib and libhydrogen.dll) within itself so you don't have to waste time compiling them.
 Other implementations probably force you to build those shared libraries or include a build step to build those 
-shared libraries which, in my experience, fail most of the time. Architectures that are currently supported:
+shared libraries which, in my experience, fail most of the time. Platforms that are currently supported:
 
-* Windows 32-bit
-* Windows 64-bit
-* Linux 32-bit
-* Linux 64-bit
-* Armv6 and above (Raspberry Pi, ODroid, etc)
+* Windows 7 and above.
+* Ubuntu 14.04 and above*.
+* Android 16 and above.
+* iOS 10.2 and above.
+* MacOS 10.11 and above.
+* Armv6 and above (e.g. Raspberry Pi 2+, ODroid).
+
+More platforms can be happily added, just create an issue.
 
 ## Usage
 
