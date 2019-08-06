@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     // ...
-    implementation 'com.github.libly:hydride-java:1.0.0' // Add this line
+    implementation 'com.github.libly:hydride-java:1.1.1' // Add this line
 }
 ```
 
