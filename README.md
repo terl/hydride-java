@@ -11,18 +11,18 @@ Hydride uses the [Libhydrogen](https://github.com/jedisct1/libsodium) project vi
 
 ## Installation
 
-Hydride is only available via Jitpack at the moment. Maven and SBT installation instructions available [here](https://jitpack.io/).
+
 
 ```groovy
-// Top-level build.gradle
 repositories {
-    // ...
-    maven { url 'https://jitpack.io' } // Add this line
+    mavenCentral()
+    maven {
+        url  "https://dl.bintray.com/libly/maven"
+    }
 }
 
 dependencies {
-    // ...
-    implementation 'com.github.libly:hydride-java:1.1.1' // Add this line
+    implementation "co.libly:hydride-java:1.1.3"
 }
 ```
 
