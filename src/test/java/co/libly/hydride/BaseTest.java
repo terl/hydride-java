@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTest {
 
-    public Hydrogen hydrogen;
+    public Hydrogen2 hydrogen;
 
     @BeforeAll
     public void doBeforeEverything() {
-        hydrogen = new Hydrogen();
+        hydrogen = new Hydrogen2();
     }
 
 
@@ -53,7 +53,7 @@ public class BaseTest {
         // Now let's send from the server to the client,
         // take note of the server session keypair
         long messageId = 1L;
-        byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
+        byte[] cipher = new byte[Hydrogen2.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
         int encryptSuccess = hydrogen.hydro_secretbox_encrypt(cipher, messageBytes, messageBytes.length, messageId, contextBytes, serverKey);
         assertEquals(0, encryptSuccess);
 

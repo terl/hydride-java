@@ -24,12 +24,12 @@ public class KeyExchangeNTest extends BaseTest {
 
     @Test
     public void keyExchange() {
-        Hydrogen.HydroKxKeyPair serverKeyPair = new Hydrogen.HydroKxKeyPair();
+        Hydrogen2.HydroKxKeyPair serverKeyPair = new Hydrogen2.HydroKxKeyPair();
         hydrogen.hydro_kx_keygen(serverKeyPair);
 
         // Client: generate session keys and a packet with an ephemeral public key to send to the server
-        Hydrogen.HydroKxSessionKeyPair clientSessionKp = new Hydrogen.HydroKxSessionKeyPair();
-        byte[] packet1 = new byte[Hydrogen.HYDRO_KX_N_PACKET1BYTES];
+        Hydrogen2.HydroKxSessionKeyPair clientSessionKp = new Hydrogen2.HydroKxSessionKeyPair();
+        byte[] packet1 = new byte[Hydrogen2.HYDRO_KX_N_PACKET1BYTES];
         int genSuccess = hydrogen.hydro_kx_n_1(clientSessionKp, packet1, null, serverKeyPair.getPublicKey());
         assertEquals(0, genSuccess);
 
@@ -38,7 +38,7 @@ public class KeyExchangeNTest extends BaseTest {
         // Done! sessionKeyPair.tx is the key for sending data to the client,
         // and sessionKeyPair.rx is the key for receiving data from the client.
         // The session keys are the same as those computed by the client, but swapped.
-        Hydrogen.HydroKxSessionKeyPair serverSessionKp = new Hydrogen.HydroKxSessionKeyPair();
+        Hydrogen2.HydroKxSessionKeyPair serverSessionKp = new Hydrogen2.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_n_2(serverSessionKp, packet1, null, serverKeyPair);
 
         assertTrue(encryptFromServerToClient(message, contextBytes, serverSessionKp.getTx(), clientSessionKp.getRx()));

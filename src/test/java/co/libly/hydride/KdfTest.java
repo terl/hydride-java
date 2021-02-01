@@ -21,19 +21,19 @@ public class KdfTest extends BaseTest {
 
     @BeforeAll
     public void contextIsTheRightLength() {
-        assertEquals(contextBytes.length, Hydrogen.HYDRO_KDF_CONTEXTBYTES);
+        assertEquals(contextBytes.length, Hydrogen2.HYDRO_KDF_CONTEXTBYTES);
     }
 
     @Test
     public void deriveKeys() {
         // Generate master key
-        byte[] masterKey = new byte[Hydrogen.HYDRO_KDF_KEYBYTES];
+        byte[] masterKey = new byte[Hydrogen2.HYDRO_KDF_KEYBYTES];
         hydrogen.hydro_kdf_keygen(masterKey);
 
         // Generate subkeys
-        byte[] subKey = new byte[Hydrogen.HYDRO_KDF_BYTES_MIN];
-        byte[] subKey2 = new byte[Hydrogen.HYDRO_KDF_BYTES_MIN];
-        byte[] subKey3 = new byte[Hydrogen.HYDRO_KDF_BYTES_MIN];
+        byte[] subKey = new byte[Hydrogen2.HYDRO_KDF_BYTES_MIN];
+        byte[] subKey2 = new byte[Hydrogen2.HYDRO_KDF_BYTES_MIN];
+        byte[] subKey3 = new byte[Hydrogen2.HYDRO_KDF_BYTES_MIN];
 
         hydrogen.hydro_kdf_derive_from_key(subKey, subKey.length, 1L, contextBytes, masterKey);
         hydrogen.hydro_kdf_derive_from_key(subKey2, subKey2.length, 1L, contextBytes, masterKey);

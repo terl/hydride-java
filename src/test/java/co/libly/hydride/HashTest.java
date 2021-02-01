@@ -25,24 +25,24 @@ public class HashTest extends BaseTest {
 
     @BeforeAll
     public void contextIsTheRightLength() {
-        assertEquals(contextBytes.length, Hydrogen.HYDRO_HASH_CONTEXTBYTES);
+        assertEquals(contextBytes.length, Hydrogen2.HYDRO_HASH_CONTEXTBYTES);
     }
 
     @Test
     public void hashWithoutKey() {
-        byte[] hash = new byte[Hydrogen.HYDRO_HASH_BYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_HASH_BYTES];
         hydrogen.hydro_hash_hash(hash, hash.length, messageBytes, message.length(), contextBytes, null);
         assertTrue(hasAtLeastOneNonZeroNumber(hash));
     }
 
     @Test
     public void hashWithKey() {
-        byte[] key = new byte[Hydrogen.HYDRO_HASH_KEYBYTES];
+        byte[] key = new byte[Hydrogen2.HYDRO_HASH_KEYBYTES];
 
-        byte[] hash = new byte[Hydrogen.HYDRO_HASH_BYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_HASH_BYTES];
         hydrogen.hydro_hash_hash(hash, hash.length, messageBytes, message.length(), contextBytes, key);
 
-        byte[] hash2 = new byte[Hydrogen.HYDRO_HASH_BYTES];
+        byte[] hash2 = new byte[Hydrogen2.HYDRO_HASH_BYTES];
         hydrogen.hydro_hash_hash(hash2, hash2.length, messageBytes, message.length(), contextBytes, key);
 
         assertTrue(hasAtLeastOneNonZeroNumber(hash));
@@ -54,12 +54,12 @@ public class HashTest extends BaseTest {
         String message2 = "A message 2";
         byte[] message2Bytes = message2.getBytes();
 
-        byte[] key = new byte[Hydrogen.HYDRO_HASH_KEYBYTES];
+        byte[] key = new byte[Hydrogen2.HYDRO_HASH_KEYBYTES];
         hydrogen.hydro_hash_keygen(key);
 
         // Multi-hash message and message2 together and store in hash
-        byte[] hash = new byte[Hydrogen.HYDRO_HASH_BYTES];
-        Hydrogen.HydroHashState state = new Hydrogen.HydroHashState.ByReference();
+        byte[] hash = new byte[Hydrogen2.HYDRO_HASH_BYTES];
+        Hydrogen2.HydroHashState state = new Hydrogen2.HydroHashState.ByReference();
         hydrogen.hydro_hash_init(state, contextBytes, key);
         hydrogen.hydro_hash_update(state, messageBytes, messageBytes.length);
         hydrogen.hydro_hash_update(state, message2Bytes, message2Bytes.length);
@@ -67,8 +67,8 @@ public class HashTest extends BaseTest {
 
         // Multi-hash message and message2 together and store in hash2 using
         // the same key we used for hash.
-        byte[] hash2 = new byte[Hydrogen.HYDRO_HASH_BYTES];
-        Hydrogen.HydroHashState state2 = new Hydrogen.HydroHashState.ByReference();
+        byte[] hash2 = new byte[Hydrogen2.HYDRO_HASH_BYTES];
+        Hydrogen2.HydroHashState state2 = new Hydrogen2.HydroHashState.ByReference();
         hydrogen.hydro_hash_init(state2, contextBytes, key);
         hydrogen.hydro_hash_update(state2, messageBytes, messageBytes.length);
         hydrogen.hydro_hash_update(state2, message2Bytes, message2Bytes.length);

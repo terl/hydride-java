@@ -24,23 +24,23 @@ public class KeyExchangeKKTest extends BaseTest {
     @Test
     public void keyExchange() {
         // Generate server and client long-term keypairs
-        Hydrogen.HydroKxKeyPair serverKeyPair = new Hydrogen.HydroKxKeyPair();
-        Hydrogen.HydroKxKeyPair clientKeyPair = new Hydrogen.HydroKxKeyPair();
+        Hydrogen2.HydroKxKeyPair serverKeyPair = new Hydrogen2.HydroKxKeyPair();
+        Hydrogen2.HydroKxKeyPair clientKeyPair = new Hydrogen2.HydroKxKeyPair();
         hydrogen.hydro_kx_keygen(serverKeyPair);
         hydrogen.hydro_kx_keygen(clientKeyPair);
 
         // Client: Initiate a key exchange
-        byte[] packet1 = new byte[Hydrogen.HYDRO_KX_KK_PACKET1BYTES];
-        Hydrogen.HydroKxState stateClient = new Hydrogen.HydroKxState();
+        byte[] packet1 = new byte[Hydrogen2.HYDRO_KX_KK_PACKET1BYTES];
+        Hydrogen2.HydroKxState stateClient = new Hydrogen2.HydroKxState();
         hydrogen.hydro_kx_kk_1(stateClient, packet1, serverKeyPair.getPublicKey(), clientKeyPair);
 
         // Server: process the initial request from the client, and compute the session keys
-        byte[] packet2 = new byte[Hydrogen.HYDRO_KX_KK_PACKET2BYTES];
-        Hydrogen.HydroKxSessionKeyPair serverSession = new Hydrogen.HydroKxSessionKeyPair();
+        byte[] packet2 = new byte[Hydrogen2.HYDRO_KX_KK_PACKET2BYTES];
+        Hydrogen2.HydroKxSessionKeyPair serverSession = new Hydrogen2.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_kk_2(serverSession, packet2, packet1, clientKeyPair.getPublicKey(), serverKeyPair);
 
         // Client: process the server packet and compute the session keys
-        Hydrogen.HydroKxSessionKeyPair clientSession = new Hydrogen.HydroKxSessionKeyPair();
+        Hydrogen2.HydroKxSessionKeyPair clientSession = new Hydrogen2.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_kk_3(stateClient, clientSession, packet2, clientKeyPair);
 
         assertTrue(encryptFromServerToClient(message, contextBytes, serverSession.getRx(), clientSession.getTx()));

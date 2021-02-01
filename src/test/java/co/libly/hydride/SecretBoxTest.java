@@ -25,13 +25,13 @@ public class SecretBoxTest extends BaseTest {
 
     @BeforeAll
     public void contextIsTheRightLength() {
-        assertEquals(contextBytes.length, Hydrogen.HYDRO_SECRETBOX_CONTEXTBYTES);
+        assertEquals(contextBytes.length, Hydrogen2.HYDRO_SECRETBOX_CONTEXTBYTES);
     }
 
     @Test
     public void encrypt() {
         // Generate key
-        byte[] key = new byte[Hydrogen.HYDRO_SECRETBOX_KEYBYTES];
+        byte[] key = new byte[Hydrogen2.HYDRO_SECRETBOX_KEYBYTES];
         hydrogen.hydro_secretbox_keygen(key);
         assertTrue(encryptFromServerToClient(message, contextBytes, key, key));
     }
@@ -39,12 +39,12 @@ public class SecretBoxTest extends BaseTest {
     @Test
     public void encryptWithProbe() {
         // Generate key
-        byte[] key = new byte[Hydrogen.HYDRO_SECRETBOX_KEYBYTES];
+        byte[] key = new byte[Hydrogen2.HYDRO_SECRETBOX_KEYBYTES];
         hydrogen.hydro_secretbox_keygen(key);
 
         // Make cipherText array
-        byte[] probe = new byte[Hydrogen.HYDRO_SECRETBOX_PROBEBYTES];
-        byte[] cipher = new byte[Hydrogen.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
+        byte[] probe = new byte[Hydrogen2.HYDRO_SECRETBOX_PROBEBYTES];
+        byte[] cipher = new byte[Hydrogen2.HYDRO_SECRETBOX_HEADERBYTES + messageBytes.length];
         byte[] decrypted = new byte[messageBytes.length];
         final long messageId = 0L;
 

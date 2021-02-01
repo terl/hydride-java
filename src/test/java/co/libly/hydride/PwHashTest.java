@@ -33,16 +33,16 @@ public class PwHashTest extends BaseTest {
     public void contextIsTheRightLength() {
         // The master key should be generated offline
         // and only using the hydro_pwhash_keygen function.
-        masterKey = new byte[Hydrogen.HYDRO_PWHASH_MASTERKEYBYTES];
+        masterKey = new byte[Hydrogen2.HYDRO_PWHASH_MASTERKEYBYTES];
         hydrogen.hydro_pwhash_keygen(masterKey);
 
-        assertEquals(contextBytes.length, Hydrogen.HYDRO_PWHASH_CONTEXTBYTES);
+        assertEquals(contextBytes.length, Hydrogen2.HYDRO_PWHASH_CONTEXTBYTES);
     }
 
 
     private boolean passwordHash(byte[] key) {
         // Create a hash from a given password
-        byte[] hash = new byte[Hydrogen.HYDRO_PWHASH_STOREDBYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_PWHASH_STOREDBYTES];
         int hashSuccess = hydrogen.hydro_pwhash_create(hash, passwordBytes, passwordBytes.length, key, opsLimit, memLimit, threads);
 
         // When we want to verify if that hash can be 'decrypted' using
@@ -62,7 +62,7 @@ public class PwHashTest extends BaseTest {
         // from a password, then use hydro_pwhash_deterministic.
         // Useful for things like file passwords.
         byte[] password = "a password".getBytes();
-        byte[] keyDeterministic = new byte[Hydrogen.HYDRO_PWHASH_MASTERKEYBYTES];
+        byte[] keyDeterministic = new byte[Hydrogen2.HYDRO_PWHASH_MASTERKEYBYTES];
         hydrogen.hydro_pwhash_deterministic(
                 keyDeterministic,
                 keyDeterministic.length,
@@ -83,10 +83,10 @@ public class PwHashTest extends BaseTest {
         // from a password, then use hydro_pwhash_deterministic.
         // Useful for things like file passwords.
         byte[] password = "a password".getBytes();
-        byte[] derivedKey = new byte[Hydrogen.HYDRO_PWHASH_MASTERKEYBYTES];
+        byte[] derivedKey = new byte[Hydrogen2.HYDRO_PWHASH_MASTERKEYBYTES];
 
         // Create a key
-        byte[] hash = new byte[Hydrogen.HYDRO_PWHASH_STOREDBYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_PWHASH_STOREDBYTES];
         int hashSuccess = hydrogen.hydro_pwhash_create(hash, passwordBytes, passwordBytes.length, masterKey, opsLimit, memLimit, threads);
 
         // Derive from the above key
@@ -122,10 +122,10 @@ public class PwHashTest extends BaseTest {
 
     @Test
     public void reEncryptUsingNewMasterKey() {
-        byte[] newMasterKey = new byte[Hydrogen.HYDRO_PWHASH_MASTERKEYBYTES];
+        byte[] newMasterKey = new byte[Hydrogen2.HYDRO_PWHASH_MASTERKEYBYTES];
         hydrogen.hydro_pwhash_keygen(newMasterKey);
 
-        byte[] hash = new byte[Hydrogen.HYDRO_PWHASH_STOREDBYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_PWHASH_STOREDBYTES];
         int hashSuccess = hydrogen.hydro_pwhash_create(hash, passwordBytes, passwordBytes.length, masterKey, opsLimit, memLimit, threads);
 
         int reEncryptSuccess = hydrogen.hydro_pwhash_reencrypt(hash, masterKey, newMasterKey);
@@ -135,7 +135,7 @@ public class PwHashTest extends BaseTest {
 
     @Test
     public void upgradeParameters() {
-        byte[] hash = new byte[Hydrogen.HYDRO_PWHASH_STOREDBYTES];
+        byte[] hash = new byte[Hydrogen2.HYDRO_PWHASH_STOREDBYTES];
         int hashSuccess = hydrogen.hydro_pwhash_create(hash, passwordBytes, passwordBytes.length, masterKey, opsLimit, memLimit, threads);
         assertEquals(0, hashSuccess);
 

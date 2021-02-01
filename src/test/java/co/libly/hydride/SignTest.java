@@ -25,16 +25,16 @@ public class SignTest extends BaseTest {
 
     @BeforeAll
     public void contextIsTheRightLength() {
-        assertEquals(contextBytes.length, Hydrogen.HYDRO_SIGN_CONTEXTBYTES);
+        assertEquals(contextBytes.length, Hydrogen2.HYDRO_SIGN_CONTEXTBYTES);
     }
 
     @Test
     public void sign() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
+        Hydrogen2.HydroSignKeyPair keyPair = new Hydrogen2.HydroSignKeyPair();
         hydrogen.hydro_sign_keygen(keyPair);
 
-        byte[] sig = new byte[Hydrogen.HYDRO_SIGN_BYTES];
+        byte[] sig = new byte[Hydrogen2.HYDRO_SIGN_BYTES];
         hydrogen.hydro_sign_create(sig, messageBytes, messageBytes.length, contextBytes, keyPair.getSecretKey());
         int verified = hydrogen.hydro_sign_verify(sig, messageBytes, messageBytes.length, contextBytes, keyPair.getPublicKey());
 
@@ -44,11 +44,11 @@ public class SignTest extends BaseTest {
     @Test
     public void signDeterministic() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
-        Hydrogen.HydroSignKeyPair keyPair2 = new Hydrogen.HydroSignKeyPair();
+        Hydrogen2.HydroSignKeyPair keyPair = new Hydrogen2.HydroSignKeyPair();
+        Hydrogen2.HydroSignKeyPair keyPair2 = new Hydrogen2.HydroSignKeyPair();
 
-        byte[] seed = new byte[Hydrogen.HYDRO_SIGN_SEEDBYTES];
-        hydrogen.hydro_random_buf(seed, Hydrogen.HYDRO_SIGN_SEEDBYTES);
+        byte[] seed = new byte[Hydrogen2.HYDRO_SIGN_SEEDBYTES];
+        hydrogen.hydro_random_buf(seed, Hydrogen2.HYDRO_SIGN_SEEDBYTES);
 
         hydrogen.hydro_sign_keygen_deterministic(keyPair, seed);
         hydrogen.hydro_sign_keygen_deterministic(keyPair2, seed);
@@ -56,7 +56,7 @@ public class SignTest extends BaseTest {
         // Are the secret keys the same?
         assertTrue(arraysEqual(keyPair.getSecretKey(), keyPair2.getSecretKey()));
 
-        byte[] sig = new byte[Hydrogen.HYDRO_SIGN_BYTES];
+        byte[] sig = new byte[Hydrogen2.HYDRO_SIGN_BYTES];
         hydrogen.hydro_sign_create(sig, messageBytes, messageBytes.length, contextBytes, keyPair.getSecretKey());
         int verified = hydrogen.hydro_sign_verify(sig, messageBytes, messageBytes.length, contextBytes, keyPair.getPublicKey());
         assertEquals(0, verified);
@@ -66,12 +66,12 @@ public class SignTest extends BaseTest {
     @Test
     public void signMultiPart() {
         // Generate keyPair
-        Hydrogen.HydroSignKeyPair keyPair = new Hydrogen.HydroSignKeyPair();
+        Hydrogen2.HydroSignKeyPair keyPair = new Hydrogen2.HydroSignKeyPair();
         hydrogen.hydro_sign_keygen(keyPair);
 
-        byte[] sig = new byte[Hydrogen.HYDRO_SIGN_BYTES];
+        byte[] sig = new byte[Hydrogen2.HYDRO_SIGN_BYTES];
         byte[] message2 = "another message".getBytes();
-        Hydrogen.HydroSignState state = new Hydrogen.HydroSignState();
+        Hydrogen2.HydroSignState state = new Hydrogen2.HydroSignState();
 
         // Sign
         hydrogen.hydro_sign_init(state, contextBytes);

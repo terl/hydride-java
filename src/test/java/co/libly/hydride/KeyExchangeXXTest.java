@@ -24,25 +24,25 @@ public class KeyExchangeXXTest extends BaseTest {
     @Test
     public void keyExchange() {
         // Generate server and client long-term keypairs
-        Hydrogen.HydroKxKeyPair serverKeyPair = new Hydrogen.HydroKxKeyPair();
-        Hydrogen.HydroKxKeyPair clientKeyPair = new Hydrogen.HydroKxKeyPair();
+        Hydrogen2.HydroKxKeyPair serverKeyPair = new Hydrogen2.HydroKxKeyPair();
+        Hydrogen2.HydroKxKeyPair clientKeyPair = new Hydrogen2.HydroKxKeyPair();
         hydrogen.hydro_kx_keygen(serverKeyPair);
         hydrogen.hydro_kx_keygen(clientKeyPair);
 
         // Client: Initiate a key exchange
-        byte[] packet1 = new byte[Hydrogen.HYDRO_KX_XX_PACKET1BYTES];
-        Hydrogen.HydroKxState stateClient = new Hydrogen.HydroKxState();
+        byte[] packet1 = new byte[Hydrogen2.HYDRO_KX_XX_PACKET1BYTES];
+        Hydrogen2.HydroKxState stateClient = new Hydrogen2.HydroKxState();
         hydrogen.hydro_kx_xx_1(stateClient, packet1, null);
 
         // Server: process the initial request from the client, and compute the session keys
-        byte[] packet2 = new byte[Hydrogen.HYDRO_KX_XX_PACKET2BYTES];
-        Hydrogen.HydroKxState stateServer = new Hydrogen.HydroKxState();
-        Hydrogen.HydroKxSessionKeyPair serverSession = new Hydrogen.HydroKxSessionKeyPair();
+        byte[] packet2 = new byte[Hydrogen2.HYDRO_KX_XX_PACKET2BYTES];
+        Hydrogen2.HydroKxState stateServer = new Hydrogen2.HydroKxState();
+        Hydrogen2.HydroKxSessionKeyPair serverSession = new Hydrogen2.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_xx_2(stateServer, packet2, packet1, null, serverKeyPair);
 
         // Client: process the server packet and compute the session keys
-        byte[] packet3 = new byte[Hydrogen.HYDRO_KX_XX_PACKET3BYTES];
-        Hydrogen.HydroKxSessionKeyPair clientSession = new Hydrogen.HydroKxSessionKeyPair();
+        byte[] packet3 = new byte[Hydrogen2.HYDRO_KX_XX_PACKET3BYTES];
+        Hydrogen2.HydroKxSessionKeyPair clientSession = new Hydrogen2.HydroKxSessionKeyPair();
         hydrogen.hydro_kx_xx_3(stateClient, clientSession, packet3, null, packet2, null, clientKeyPair);
 
         // Server: process the client packet and compute the session keys:
