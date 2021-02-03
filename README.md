@@ -7,7 +7,7 @@
 
 Hydride is a Java encryption library that allows developers to incorporate amazing 
 cryptography that is compatible on a wide range of platforms into their projects. 
-Hydride uses the [Libhydrogen](https://github.com/jedisct1/libsodium) project via JNA wrapping.
+Hydride uses the [Libhydrogen](https://github.com/jedisct1/libhydrogen) project via JNA wrapping.
 
 ## Installation
 
