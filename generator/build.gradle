@@ -1,0 +1,65 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'application'
+}
+
+group 'co.libly.generator'
+version '0.0.1'
+mainClassName = "${group}.Generator"
+
+application {
+    mainClass = mainClassName
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.18.0'
+    implementation 'org.buildobjects:jproc:2.3.0'
+    implementation "org.eclipse.jgit:org.eclipse.jgit.http.server:5.10.0.202012080955-r"
+}
+
+
+private String getSubFolders(Properties properties) {
+    def packageString = properties.getProperty("package").replace(".", "/")
+    return "/$packageString"
+}
+
+def loadVariables() {
+    def properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+    properties.load(inputStream)
+    project.ext.extractionDirectory = properties.getProperty("extractionDirectory") ?: sourceSets.main.resources.srcDirs[0].absolutePath
+    project.ext.subFolders = getSubFolders(properties)
+    project.ext.outputPackage = properties.getProperty("package") ?: group
+    project.ext.firstDir = subFolders.substring(1).split("/")[0]
+}
+
+// Extract the properties file
+loadVariables()
+
+// Override the run task with our args
+run {
+    args "$extractionDirectory$subFolders"
+}
+
+task generateJNA(type: Exec) {
+    workingDir extractionDirectory
+    commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, project.ext.outputPackage
+}
+
+task moveGenerated(type: Copy) {
+    def javaDir = "${sourceSets.main.java.srcDirs[0].absolutePath}/$firstDir"
+    def generated = "$extractionDirectory/$firstDir"
+    def source = file(generated)
+    def dest = file(javaDir)
+    from source
+    into dest
+}
+
+task runAllTasks(dependsOn: [generateJNA, run, moveGenerated]) {
+}
