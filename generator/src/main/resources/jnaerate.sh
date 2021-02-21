@@ -7,17 +7,22 @@
 #
 
 output_folder="../"
-package="co.libly.hydride"
 jnaeratorPath="$1"
+package="$2"
 
-echo "Removing previously generated libs"
-rm -r co
-rm -r libhydrogen
+echo "[JNAerate] Removing previously generated libs"
+rm -rf co || true
+rm -rf libhydrogen || true
 
-echo "Cloning libhydrogen"
+echo "[JNAerate] Shallow cloning libhydrogen"
 git clone "https://github.com/jedisct1/libhydrogen" --depth 1
 
-echo "JNAerate into $output_folder$package"
-cd libhydrogen
-java -jar $jnaeratorPath -library hydrogen hydrogen.h -o $output_folder -v -mode Directory -runtime JNA -skipDeprecated -forceStringSignatures -dontCastConstants -direct -noPrimitiveArrays -limitComments -noComments -noStaticInit -package $package -f
+echo "[JNAerate] JNAerating into $output_folder$package"
+cd libhydrogen || exit
+java -jar "$jnaeratorPath" -library hydrogen hydrogen.h -o $output_folder -v -mode Directory -runtime JNA -skipDeprecated -forceStringSignatures -dontCastConstants -direct -noPrimitiveArrays -limitComments -noComments -noStaticInit -package $package -f
 
+echo "[JNAerate] JNAeration finished, cleaning up"
+cd ..
+rm -r libhydrogen
+
+echo "[JNAerate] Done."

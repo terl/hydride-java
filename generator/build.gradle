@@ -37,6 +37,7 @@ def loadVariables() {
     project.ext.subFolders = getSubFolders(properties)
     project.ext.outputPackage = properties.getProperty("package") ?: group
     project.ext.firstDir = subFolders.substring(1).split("/")[0]
+    project.ext.copyToDir = properties.getProperty("copyToDir") ?: rootProject.project.sourceSets.main.java.srcDirs[0].absolutePath
 }
 
 // Extract the properties file
@@ -53,13 +54,19 @@ task generateJNA(type: Exec) {
 }
 
 task moveGenerated(type: Copy) {
-    def javaDir = "${sourceSets.main.java.srcDirs[0].absolutePath}/$firstDir"
+    def destDir = "$copyToDir/$firstDir"
     def generated = "$extractionDirectory/$firstDir"
     def source = file(generated)
-    def dest = file(javaDir)
+    def dest = file(destDir)
     from source
     into dest
 }
 
-task runAllTasks(dependsOn: [generateJNA, run, moveGenerated]) {
+task cleanUp(type: Delete) {
+    delete "$extractionDirectory/$firstDir"
+    followSymlinks = true
+}
+
+task runAllTasks(dependsOn: [generateJNA, run, moveGenerated, cleanUp]) {
+
 }

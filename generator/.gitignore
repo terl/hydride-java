@@ -3,7 +3,7 @@
 src/main/resources/co
 src/main/resources/libhydrogen
 src/main/java/co
-
+local.properties
 
 # CMake
 cmake-build-*/
