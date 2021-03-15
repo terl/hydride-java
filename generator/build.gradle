@@ -85,7 +85,6 @@ task generateJNAUsingScript(type: Exec) {
 task generateJNA(type: Exec) {
     workingDir "$extractionDirectory/libhydrogen"
     println("[HYDRIDE] Generating code")
-    commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, (String) project.ext.outputPackage
     String packageName = (String) project.ext.outputPackage
     String jnaJar = file("libs/jnaerator.jar").absolutePath
     String out = "../"
