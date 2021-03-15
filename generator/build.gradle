@@ -1,3 +1,6 @@
+import org.gradle.api.GradleException
+import org.gradle.api.tasks.Exec
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id 'application'
@@ -33,14 +36,15 @@ def loadVariables() {
     def properties = new Properties()
     InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
     properties.load(inputStream)
+
     project.ext.extractionDirectory = properties.getProperty("extractionDirectory") ?: sourceSets.main.resources.srcDirs[0].absolutePath
     project.ext.subFolders = getSubFolders(properties)
     project.ext.outputPackage = properties.getProperty("package") ?: group
     project.ext.firstDir = subFolders.substring(1).split("/")[0]
-    project.ext.copyToDir = properties.getProperty("copyToDir") ?: rootProject.project.sourceSets.main.java.srcDirs[0].absolutePath
+    project.ext.copyToDir = properties.getProperty("copyToDir") ?: rootProject.project.sourceSets.main.kotlin.srcDirs[0].absolutePath
 }
 
-// Extract the properties file
+// Load the properties file into the project's ext scope
 loadVariables()
 
 // Override the run task with our args
@@ -48,14 +52,37 @@ run {
     args "$extractionDirectory$subFolders"
 }
 
+task cloneTheRepo(type: Exec) {
+    workingDir extractionDirectory
+    println("[HYDRIDE] Cloning libhydrogen")
+    if (!workingDir.isDirectory()) {
+        throw new GradleException("[HYDRIDE] Please ensure extractionDirectory is a directory.")
+    }
+    File libhydrogenDir = new File(workingDir, "libhydrogen")
+    if (libhydrogenDir.exists()) {
+        workingDir libhydrogenDir
+        println("[HYDRIDE] Libhydrogen already exists, pulling instead")
+        commandLine "git", "pull"
+    } else {
+        commandLine "git", "clone", "https://github.com/jedisct1/libhydrogen"
+    }
+    println("[HYDRIDE] Cloning complete.")
+}
+
 task generateJNA(type: Exec) {
     workingDir extractionDirectory
-    commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, project.ext.outputPackage
+    println("[HYDRIDE] Removing previously generated code")
+    commandLine "rm", "-rf", "co"
+    println("[HYDRIDE] Generating code")
+    commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, (String) project.ext.outputPackage
 }
 
 task moveGenerated(type: Copy) {
     def destDir = "$copyToDir/$firstDir"
     def generated = "$extractionDirectory/$firstDir"
+
+    println("[HYDRIDE] Moving $generated into $destDir")
+
     def source = file(generated)
     def dest = file(destDir)
     from source
@@ -67,6 +94,11 @@ task cleanUp(type: Delete) {
     followSymlinks = true
 }
 
-task runAllTasks(dependsOn: [generateJNA, run, moveGenerated, cleanUp]) {
+task runAllTasks(dependsOn: [cloneTheRepo, generateJNA, run, moveGenerated, cleanUp]) {
 
 }
+
+generateJNA.mustRunAfter cloneTheRepo
+run.mustRunAfter generateJNA
+moveGenerated.mustRunAfter run
+cleanUp.shouldRunAfter moveGenerated
