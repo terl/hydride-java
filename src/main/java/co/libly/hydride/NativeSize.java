@@ -7,7 +7,7 @@ public class NativeSize extends IntegerType {
 
     private static final long SerialVersionUID = 2398288011955445078L;
 
-    public static int SIZE = Native.SIZETSIZE;
+    public static int SIZE = Native.SIZE_T_SIZE;
 
     public NativeSize() {
         this(0);
