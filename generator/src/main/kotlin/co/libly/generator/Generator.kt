@@ -79,6 +79,7 @@ class Generator(val absolutePath: String) {
             .forEach { method ->
                 method.name = method.nameAsString
                     .toCamelCase()
+                    .decapitalize()
                     .toSimpleName()
             }
 

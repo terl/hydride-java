@@ -98,14 +98,23 @@ task generateJNA(type: Exec) {
 }
 
 task moveGenerated(type: Copy) {
+    // This line forces this task to always run. If
+    // we did not force this to run then what happens
+    // is it won't move and overwrite the files that have been
+    // already been output. E.g. if we made a change in Generator.kt
+    // to update all methods to have a number, then if the following
+    // line was not added then this task would be "UP-TO-DATE"
+    // and therefore nothing will change in the output files.
+    outputs.upToDateWhen { false }
+
     def destDir = "$copyToDir/$firstDir"
     def generated = "$extractionDirectory/$firstDir"
-
-    println("[HYDRIDE] Moving $generated into $destDir")
     def source = file(generated)
     def dest = file(destDir)
     from source
     into dest
+
+    println "[HYDRIDE] Moved $generated into $destDir"
 }
 
 task cleanExtracted(type: Delete) {
