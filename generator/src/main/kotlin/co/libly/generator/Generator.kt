@@ -38,6 +38,63 @@ class Generator(val absolutePath: String) {
         }
     }
 
+    private fun manipulateHydrogenLibrary(): Generator {
+        val file = File(absolutePath, "HydrogenLibrary.java")
+        if (!file.exists()) {
+            println("HydrogenLibrary.java not found. Skipping.")
+            return this
+        }
+        val parsed = parse(file)
+
+        // Rename its class name
+        println("Changing all HydrogenLibrary's to Hydrogen")
+        parsed.findAll(SimpleName::class.java)
+            .filter { simpleName -> simpleName.asString() == "HydrogenLibrary" }
+            .forEach { s ->
+                s.id = "Hydrogen"
+            }
+
+        // Make all fields uppercase
+        println("Ensure all fields are uppercase")
+        parsed.findAll(FieldDeclaration::class.java)
+            .forEach { field ->
+                if (field.isStatic && field.isFinal) {
+                    field.variables.forEach { variable ->
+                        variable.name = variable.name.asString().toUpperCase().toSimpleName()
+                    }
+                }
+            }
+
+        // Remove redundant static block
+        println("Delete static { } blocks")
+        parsed.findAll(InitializerDeclaration::class.java)
+            .forEach { init ->
+                if (init.isStatic) {
+                    init.remove()
+                }
+            }
+
+        println("Ensure all methods are camel cased")
+        parsed.findAll(MethodDeclaration::class.java)
+            .forEach { method ->
+                method.name = method.nameAsString
+                    .toCamelCase()
+                    .toSimpleName()
+            }
+
+        println("Remove NativeSize erroring import")
+        parsed.findAll(ImportDeclaration::class.java)
+            .forEach { import ->
+                if (import.nameAsString.contains("com.ochafik.lang.jnaerator.runtime.NativeSize", true)) {
+                    import.remove()
+                }
+            }
+
+        file.writeText(LexicalPreservingPrinter.print(parsed))
+        Files.move(file.toPath(), file.toPath().resolveSibling("Hydrogen.java"), StandardCopyOption.REPLACE_EXISTING)
+        return this
+    }
+
     private fun camelCaseAllClasses() {
         val folder = File(absolutePath)
         val namesToCamelCase = mutableListOf<String>()
@@ -79,48 +136,10 @@ class Generator(val absolutePath: String) {
             }
         }
 
+        println("Here are all the names to camel case:")
         println(namesToCamelCase)
     }
 
-    private fun manipulateHydrogenLibrary(): Generator {
-        val file = File(absolutePath, "HydrogenLibrary.java")
-        if (!file.exists()) {
-            println("HydrogenLibrary.java not found. Skipping.")
-            return this
-        }
-        val parsed = parse(file)
-
-        // Rename its class name
-        println("Changing all HydrogenLibrary's to Hydrogen")
-        parsed.findAll(SimpleName::class.java)
-                .filter { simpleName -> simpleName.asString() == "HydrogenLibrary" }
-                .forEach { s ->
-                    s.id = "Hydrogen"
-                }
-
-        // Make all fields uppercase
-        println("Ensure all fields are uppercase")
-        parsed.findAll(FieldDeclaration::class.java)
-                .forEach { field ->
-                    if (field.isStatic && field.isFinal) {
-                        field.variables.forEach { variable ->
-                            variable.name = variable.name.asString().toUpperCase().toSimpleName()
-                        }
-                    }
-                }
-
-        // Remove redundant static block
-        println("Delete static { } blocks")
-        parsed.findAll(InitializerDeclaration::class.java)
-                .forEach { init ->
-                    if (init.isStatic) {
-                        init.remove()
-                    }
-                }
-        file.writeText(LexicalPreservingPrinter.print(parsed))
-        Files.move(file.toPath(), file.toPath().resolveSibling("Hydrogen.java"), StandardCopyOption.REPLACE_EXISTING)
-        return this
-    }
 }
 
 fun SimpleName.camelCase() = asString().toCamelCase()

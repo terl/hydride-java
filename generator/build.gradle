@@ -1,4 +1,5 @@
 import org.gradle.api.GradleException
+import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.Exec
 
 plugins {
@@ -69,12 +70,31 @@ task cloneTheRepo(type: Exec) {
     println("[HYDRIDE] Cloning complete.")
 }
 
-task generateJNA(type: Exec) {
+task removePreviousCode(type: Exec) {
     workingDir extractionDirectory
     println("[HYDRIDE] Removing previously generated code")
     commandLine "rm", "-rf", "co"
+}
+
+task generateJNAUsingScript(type: Exec) {
+    workingDir "$extractionDirectory"
     println("[HYDRIDE] Generating code")
     commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, (String) project.ext.outputPackage
+}
+
+task generateJNA(type: Exec) {
+    workingDir "$extractionDirectory/libhydrogen"
+    println("[HYDRIDE] Generating code")
+    commandLine "sh", "jnaerate.sh", file("libs/jnaerator.jar").absolutePath, (String) project.ext.outputPackage
+    String packageName = (String) project.ext.outputPackage
+    String jnaJar = file("libs/jnaerator.jar").absolutePath
+    String out = "../"
+    List<String> commandBuilder = ["java", "-jar", jnaJar, "-library", "hydrogen"].toList()
+    commandBuilder.addAll("-o $out -v -mode Directory -runtime JNA".split())
+    commandBuilder.addAll("-skipDeprecated -forceStringSignatures -dontCastConstants -direct -noPrimitiveArrays -limitComments -noComments -noStaticInit".split())
+    commandBuilder.addAll("-package $packageName -f".split())
+    commandBuilder.add("hydrogen.h")
+    commandLine commandBuilder
 }
 
 task moveGenerated(type: Copy) {
@@ -82,23 +102,35 @@ task moveGenerated(type: Copy) {
     def generated = "$extractionDirectory/$firstDir"
 
     println("[HYDRIDE] Moving $generated into $destDir")
-
     def source = file(generated)
     def dest = file(destDir)
     from source
     into dest
 }
 
-task cleanUp(type: Delete) {
+task cleanExtracted(type: Delete) {
     delete "$extractionDirectory/$firstDir"
     followSymlinks = true
 }
 
-task runAllTasks(dependsOn: [cloneTheRepo, generateJNA, run, moveGenerated, cleanUp]) {
+task removeLibydrogen(type: Delete) {
+    delete "$extractionDirectory/libhydrogen"
+    followSymlinks = true
+}
+
+task runAllTasks(dependsOn: [cloneTheRepo,
+                             removePreviousCode,
+                             generateJNA,
+                             run,
+                             moveGenerated,
+                             cleanExtracted,
+                             removeLibydrogen]) {
 
 }
 
-generateJNA.mustRunAfter cloneTheRepo
+removePreviousCode.mustRunAfter cloneTheRepo
+generateJNA.mustRunAfter removePreviousCode
 run.mustRunAfter generateJNA
 moveGenerated.mustRunAfter run
-cleanUp.shouldRunAfter moveGenerated
+cleanExtracted.shouldRunAfter moveGenerated
+removeLibydrogen.shouldRunAfter cleanExtracted
